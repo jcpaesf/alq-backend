@@ -21,6 +21,6 @@ usersRouter.post('/', usersController.create);
 usersRouter.put('/', ensureAuthenticated, usersController.update);
 usersRouter.patch('/avatar/:id', upload.single('avatar'), userAvatarController.update);
 usersRouter.patch('/confirm', confirmEmailController.update);
-usersRouter.patch('/:id/aproved', ensureAuthenticated, userAprovedController.update);
+usersRouter.patch('/:id/approve', ensureAuthenticated, userAprovedController.update);
 
 export default usersRouter;
