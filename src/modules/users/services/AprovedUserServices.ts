@@ -30,7 +30,7 @@ class AprovedUserServices {
         user = await this.usersRepository.findById(user_id);
 
         if (!user) {
-            throw new AppError('Usuário não está autenticado');
+            throw new AppError('Usuário não existe');
         }
 
         user.aproved = true;
