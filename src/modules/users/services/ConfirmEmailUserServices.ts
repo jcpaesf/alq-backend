@@ -19,27 +19,41 @@ class ConfirmEmailUserServices {
     ) { }
 
     public async execute({ email, token }: IRequest): Promise<void> {
-        const userToken = await this.usersTokenRepository.findByToken(token);
+        if (token) {
+            const userToken = await this.usersTokenRepository.findByToken(token);
 
-        if (!userToken) {
-            throw new AppError('Token inválido');
+            if (!userToken) {
+                throw new AppError('Token inválido');
+            }
+
+            const user = await this.usersRepository.findById(userToken.user_id);
+
+            if (!user) {
+                throw new AppError('Usuário não existe');
+            }
+
+            if (user.email !== email) {
+                throw new AppError('E-mail inválido.');
+            }
+
+            const tokenCreatedAt = userToken.created_at;
+            const compareDate = addHours(tokenCreatedAt, 2);
+
+            if (isAfter(Date.now(), compareDate)) {
+                throw new AppError('Token expirado', 401);
+            }
+
+            user.confirm_email = true;
+
+            await this.usersRepository.save(user);
+
+            return;
         }
 
-        const user = await this.usersRepository.findById(userToken.user_id);
+        const user = await this.usersRepository.findByEmail(email);
 
         if (!user) {
-            throw new AppError('Usuário não existe');
-        }
-
-        if (user.email !== email) {
-            throw new AppError('E-mail inválido.');
-        }
-
-        const tokenCreatedAt = userToken.created_at;
-        const compareDate = addHours(tokenCreatedAt, 2);
-
-        if (isAfter(Date.now(), compareDate)) {
-            throw new AppError('Token expirado', 401);
+            throw new AppError('Usuário inválido', 400);
         }
 
         user.confirm_email = true;
