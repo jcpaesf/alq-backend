@@ -81,7 +81,8 @@ class CreateUserServices {
             work_online: userDto.work_online,
             work_presential: userDto.work_presential,
             type: userDto.type,
-            aproved: (userDto.type === 'user' ? true : false)
+            aproved: (userDto.type === 'user' || userDto.type === 'admin' ? true : false),
+            confirm_email: (userDto.type === 'admin' ? true : false)
         });
 
         if (userDto.specialties?.length) {

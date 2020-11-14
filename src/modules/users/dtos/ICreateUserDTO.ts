@@ -17,4 +17,5 @@ export default interface ICreateUserDTO {
     work_online: boolean;
     type: TypeUser;
     aproved: boolean;
+    confirm_email: boolean;
 }
