@@ -9,6 +9,7 @@ import IUserSpecialtiesRepository from '../repositories/IUserSpecialtiesReposito
 import { classToClass } from 'class-transformer';
 import path from 'path';
 import UserSpecialtie from '../infra/typeorm/entities/UserSpecialtie';
+import ISpecialtiesRepository from '../repositories/ISpecialtiesRepository';
 
 enum TypeUser {
     User = 'user',
@@ -52,7 +53,10 @@ class CreateUserServices {
         private usersTokenRepository: IUsersTokenRepository,
 
         @inject('UserSpecialtiesRepository')
-        private userSpecialtiesRepository: IUserSpecialtiesRepository
+        private userSpecialtiesRepository: IUserSpecialtiesRepository,
+
+        @inject('SpecialtiesRepository')
+        private specialtiesRepository: ISpecialtiesRepository
     ) { }
 
     public async execute(userDto: IRequest): Promise<User> {
@@ -87,18 +91,18 @@ class CreateUserServices {
 
         if (userDto.specialties?.length) {
             for (const userSpecialties of userDto.specialties) {
-                let specialtie = await this.userSpecialtiesRepository.findById(userSpecialties.id);
+                const specialtie = await this.specialtiesRepository.findById(userSpecialties.id);
 
                 if (!specialtie) {
                     throw new AppError('Especialidade inválida');
                 }
 
-                specialtie = await this.userSpecialtiesRepository.create({
+                const userSpecialtie = await this.userSpecialtiesRepository.create({
                     user_id: user.id,
                     specialtie_id: specialtie.id
                 });
 
-                specialties.push(specialtie);
+                specialties.push(userSpecialtie);
             }
 
             Object.assign(user, { specialties });
