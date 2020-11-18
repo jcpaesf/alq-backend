@@ -8,36 +8,45 @@ import {
     JoinColumn
 } from 'typeorm';
 
-import Specialtie from './Specialtie';
+import { Exclude } from 'class-transformer';
 import User from './User';
 
-@Entity('user_specialties')
-class UserSpecialtie {
+@Entity('user_schedules')
+class UserSchedule {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column('uuid')
-    specialtie_id: string;
-
-    @Column('uuid')
     user_id: string;
 
-    @Column('integer')
-    service_time: number;
+    @Column('timestamp with time zone')
+    service_date: Date;
 
-    @OneToOne(() => Specialtie)
-    @JoinColumn({ name: 'specialtie_id' })
-    specialtie: Specialtie;
+    @Exclude()
+    @Column('integer')
+    start_time: number;
+
+    @Column('varchar')
+    start: string;
+
+    @Exclude()
+    @Column('integer')
+    end_time: number;
+
+    @Column('varchar')
+    end: string;
 
     @OneToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user: User;
 
+    @Exclude()
     @CreateDateColumn()
     created_at: Date;
 
+    @Exclude()
     @UpdateDateColumn()
     updated_at: Date;
 }
 
-export default UserSpecialtie;
+export default UserSchedule;

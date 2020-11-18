@@ -24,6 +24,9 @@ import UserResumesRepository from '@modules/users/infra/typeorm/repositories/Use
 import IUserEnvironmentsRepository from '@modules/users/repositories/IUserEnvironmentsRepository';
 import UserEnvironmentsRepository from '@modules/users/infra/typeorm/repositories/UserEnvironmentsRepository';
 
+import IUserSchedulesRepository from '@modules/users/repositories/IUserSchedulesRepository';
+import UserSchedulesRepository from '@modules/users/infra/typeorm/repositories/UserSchedulesRepository';
+
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
     UsersRepository
@@ -57,4 +60,9 @@ container.registerSingleton<IUserResumesRepository>(
 container.registerSingleton<IUserEnvironmentsRepository>(
     'UserEnvironmentsRepository',
     UserEnvironmentsRepository
+);
+
+container.registerSingleton<IUserSchedulesRepository>(
+    'UserSchedulesRepository',
+    UserSchedulesRepository
 );
