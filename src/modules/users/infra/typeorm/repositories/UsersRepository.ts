@@ -17,6 +17,14 @@ class UsersRepository implements IUsersRepository {
         return users;
     }
 
+    public async findTherapists(): Promise<User[]> {
+        const users = await this.ormRepository.find({
+            where: { type: 'therapist' }
+        });
+
+        return users;
+    }
+
     public async findById(id: string): Promise<User | undefined> {
         const user = await this.ormRepository.findOne(id);
 
