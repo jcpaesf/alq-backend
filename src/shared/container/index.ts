@@ -30,6 +30,9 @@ import UserSchedulesRepository from '@modules/users/infra/typeorm/repositories/U
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 
+import IChatRoomsRepository from '@modules/appointments/repositories/IChatRoomsRepository';
+import ChatRoomsRepository from '@modules/appointments/infra/typeorm/repositories/ChatRoomsRepository';
+
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
     UsersRepository
@@ -73,4 +76,9 @@ container.registerSingleton<IUserSchedulesRepository>(
 container.registerSingleton<IAppointmentsRepository>(
     'AppointmentsRepository',
     AppointmentsRepository
+);
+
+container.registerSingleton<IChatRoomsRepository>(
+    'ChatRoomsRepository',
+    ChatRoomsRepository
 );

@@ -5,6 +5,7 @@ import Appointment from '../infra/typeorm/entities/Appointment';
 import IUserSpecialtiesRepository from '@modules/users/repositories/IUserSpecialtiesRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import IChatRoomsRepository from '../repositories/IChatRoomsRepository';
 
 interface IRequest {
     therapist_id: string;
@@ -21,7 +22,9 @@ class CreateAppointmentServices {
         @inject('UserSpecialtiesRepository')
         private userSpecialtiesRepository: IUserSpecialtiesRepository,
         @inject('UsersRepository')
-        private usersRepository: IUsersRepository
+        private usersRepository: IUsersRepository,
+        @inject('ChatRoomsRepository')
+        private chatRoomsRepository: IChatRoomsRepository
     ) { }
 
     public async execute({ therapist_id, user_id, date, specialtie_id }: IRequest): Promise<Appointment> {
@@ -53,12 +56,18 @@ class CreateAppointmentServices {
             throw new AppError('Este horário já está agendado', 400);
         }
 
-        const appointment = this.appointmentsRepository.create({
+        const appointment = await this.appointmentsRepository.create({
             therapist_id,
             user_id,
             date: parsedDate,
             specialtie_id,
             status: 'schedule'
+        });
+
+        await this.chatRoomsRepository.create({
+            appointment_id: appointment.id,
+            user_id,
+            therapist_id
         });
 
         return appointment;
