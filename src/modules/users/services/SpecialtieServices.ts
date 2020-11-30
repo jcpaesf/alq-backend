@@ -19,11 +19,11 @@ class SpecialtiesServices {
         const user = await this.usersRepository.findById(auth_user);
 
         if (!user) {
-            throw new AppError('Usuário não autenticado', 400);
+            throw new AppError('Usuário não autenticado');
         }
 
         if (user.type !== 'admin') {
-            throw new AppError('Usuário não é administrador', 400);
+            throw new AppError('Usuário não é administrador');
         }
 
         let specialtie: Specialtie[] | Specialtie | undefined;
@@ -32,7 +32,7 @@ class SpecialtiesServices {
             specialtie = await this.specialtiesRepository.findById(id);
 
             if (!specialtie) {
-                throw new AppError('Especialidade não encontrada', 400);
+                throw new AppError('Especialidade não encontrada');
             }
 
             return specialtie;
@@ -47,11 +47,11 @@ class SpecialtiesServices {
         const user = await this.usersRepository.findById(auth_user);
 
         if (!user) {
-            throw new AppError('Usuário não autenticado', 400);
+            throw new AppError('Usuário não autenticado');
         }
 
         if (user.type !== 'admin') {
-            throw new AppError('Usuário não é administrador', 400);
+            throw new AppError('Usuário não é administrador');
         }
 
         const specialtie = await this.specialtiesRepository.create(dto);
@@ -63,11 +63,11 @@ class SpecialtiesServices {
         const user = await this.usersRepository.findById(auth_user);
 
         if (!user) {
-            throw new AppError('Usuário não autenticado', 400);
+            throw new AppError('Usuário não autenticado');
         }
 
         if (user.type !== 'admin') {
-            throw new AppError('Usuário não é administrador', 400);
+            throw new AppError('Usuário não é administrador');
         }
 
         const specialtie = await this.specialtiesRepository.findById(dto.id);

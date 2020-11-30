@@ -13,11 +13,11 @@ export default function ensureAuthenticated(request: Request, response: Response
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-        throw new AppError('Usuário não está autenticado', 401);
+        throw new AppError('Usuário não está autenticado');
     }
 
     if (!jwtConfig.jwt.secret) {
-        throw new AppError('JWT não definido', 401);
+        throw new AppError('JWT não definido');
     }
 
     const [, token] = authHeader.split(' ');
@@ -33,6 +33,6 @@ export default function ensureAuthenticated(request: Request, response: Response
 
         return next();
     } catch (e) {
-        throw new AppError('Usuário não está autenticado', 401);
+        throw new AppError('Usuário não está autenticado');
     }
 }

@@ -46,12 +46,12 @@ class CreateUserScheduleServices {
             for (const scheduleDate of userScheduleDate) {
                 if ((start_time >= scheduleDate.start_time && start_time <= scheduleDate.end_time) ||
                     (end_time >= scheduleDate.start_time && end_time <= scheduleDate.end_time)) {
-                    throw new AppError('Horário de atendimento inválido', 400);
+                    throw new AppError('Horário de atendimento inválido');
                 }
 
                 if ((scheduleDate.start_time >= start_time && scheduleDate.start_time <= end_time) ||
                     (scheduleDate.start_time >= end_time && scheduleDate.end_time <= end_time)) {
-                    throw new AppError('Horário de atendimento inválido', 400);
+                    throw new AppError('Horário de atendimento inválido');
                 }
             }
 

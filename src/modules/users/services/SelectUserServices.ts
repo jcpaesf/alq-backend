@@ -20,11 +20,11 @@ class SelectUserServices {
         const userAuth = await this.usersRepository.findById(user_auth);
 
         if (!userAuth) {
-            throw new AppError('Usuário não autenticado', 401);
+            throw new AppError('Usuário não autenticado');
         }
 
         if (userAuth.type !== 'admin') {
-            throw new AppError('Usuário não é administrador', 401);
+            throw new AppError('Usuário não é administrador');
         }
 
         let user: User[] | User | undefined;
@@ -33,7 +33,7 @@ class SelectUserServices {
             user = await this.usersRepository.findById(user_id);
 
             if (!user) {
-                throw new AppError('Usuário não encontrado', 400);
+                throw new AppError('Usuário não encontrado');
             }
 
             return classToClass(user);

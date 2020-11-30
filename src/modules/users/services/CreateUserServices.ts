@@ -64,7 +64,7 @@ class CreateUserServices {
         const checkUserEmailExists = await this.usersRepository.findByEmail(userDto.email);
 
         if (checkUserEmailExists) {
-            throw new AppError('E-mail já cadastrado', 401);
+            throw new AppError('E-mail já cadastrado');
         }
 
         if (userDto.type === 'therapist' && !userDto.specialties?.length) {

@@ -26,11 +26,11 @@ class CreateUserResumeServices {
         const user = await this.usersRepository.findById(user_id);
 
         if (!user) {
-            throw new AppError('Usuário inválido', 400);
+            throw new AppError('Usuário inválido');
         }
 
         if (user.type !== 'therapist') {
-            throw new AppError('Usuário não é terapeuta', 400);
+            throw new AppError('Usuário não é terapeuta');
         }
 
         const fileName = await this.storageProvider.saveFile(file);

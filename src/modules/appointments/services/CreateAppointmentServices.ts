@@ -31,11 +31,11 @@ class CreateAppointmentServices {
         const therapist = await this.usersRepository.findById(therapist_id);
 
         if (!therapist) {
-            throw new AppError('Terapeuta não cadastrado', 400);
+            throw new AppError('Terapeuta não cadastrado');
         }
 
         if (therapist.type !== 'therapist') {
-            throw new AppError('Agendamento só pode ser feito com um terapeuta', 400);
+            throw new AppError('Agendamento só pode ser feito com um terapeuta');
         }
 
         const userSpecialties = await this.userSpecialtiesRepository.findByUserId(therapist_id);
@@ -45,7 +45,7 @@ class CreateAppointmentServices {
         });
 
         if (!existsSpecialties) {
-            throw new AppError('Especialidade inválida para o terapeuta', 400);
+            throw new AppError('Especialidade inválida para o terapeuta');
         }
 
         const parsedDate = startOfHour(parseISO(date));
@@ -53,7 +53,7 @@ class CreateAppointmentServices {
         const existsAppointment = await this.appointmentsRepository.findAppointment(parsedDate, therapist_id);
 
         if (existsAppointment) {
-            throw new AppError('Este horário já está agendado', 400);
+            throw new AppError('Este horário já está agendado');
         }
 
         const appointment = await this.appointmentsRepository.create({

@@ -40,7 +40,7 @@ class ConfirmEmailUserServices {
             const compareDate = addHours(tokenCreatedAt, 2);
 
             if (isAfter(Date.now(), compareDate)) {
-                throw new AppError('Token expirado', 401);
+                throw new AppError('Token expirado');
             }
 
             user.confirm_email = true;
@@ -53,7 +53,7 @@ class ConfirmEmailUserServices {
         const user = await this.usersRepository.findByEmail(email);
 
         if (!user) {
-            throw new AppError('Usuário inválido', 400);
+            throw new AppError('Usuário inválido');
         }
 
         user.confirm_email = true;

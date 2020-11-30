@@ -24,7 +24,7 @@ class SendForgotPasswordEmailServices {
         const user = await this.usersRepository.findByEmail(email);
 
         if (!user) {
-            throw new AppError('E-mail não cadastrado', 401);
+            throw new AppError('E-mail não cadastrado');
         }
 
         const forgotPasswordTemplate = path.resolve(__dirname, '..', 'views', 'forgot_password.hbs')
