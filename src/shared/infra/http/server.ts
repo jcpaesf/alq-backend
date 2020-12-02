@@ -51,6 +51,7 @@ const listen = app.listen(3333, () => {
 
 const io = socket(listen);
 
+io.origins(['*']);
 io.on('connection', (socket: any) => {
     socket.on('join room', (roomID: any) => {
         if (users[roomID]) {
