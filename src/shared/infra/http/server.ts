@@ -51,7 +51,7 @@ const listen = app.listen(3333, () => {
 
 const io = socket(listen, {
     cors: {
-        origin: "https://keen-lichterman-fd32ad.netlify.app:*/",
+        origin: "http://video.jcpaesf.com",
         methods: ["GET", "POST"],
         credentials: true
     }
