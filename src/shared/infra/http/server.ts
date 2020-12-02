@@ -49,9 +49,14 @@ const listen = app.listen(3333, () => {
     console.log('Server started on port 3333...');
 });
 
-const io = socket(listen);
+const io = socket(listen, {
+    cors: {
+        origin: "https://keen-lichterman-fd32ad.netlify.app:*/",
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 
-io.origins(['*']);
 io.on('connection', (socket: any) => {
     socket.on('join room', (roomID: any) => {
         if (users[roomID]) {
