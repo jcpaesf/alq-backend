@@ -51,7 +51,7 @@ const listen = app.listen(3333, () => {
 
 const io = socket(listen, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://amazing-lumiere-7702ba.netlify.app",
         methods: ["GET", "POST"]
     }
 });
