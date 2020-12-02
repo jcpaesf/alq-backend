@@ -51,9 +51,7 @@ const listen = app.listen(3333, () => {
 
 const io = socket(listen, {
     cors: {
-        origin: "http://video.jcpaesf.com",
-        methods: ["GET", "POST"],
-        credentials: true
+        origin: '*'
     }
 });
 
