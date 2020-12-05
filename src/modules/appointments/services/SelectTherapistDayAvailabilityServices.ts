@@ -1,7 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { getHours } from 'date-fns';
+import { addMinutes, getHours, getMinutes } from 'date-fns';
 import IUserSchedulesRepository from '@modules/users/repositories/IUserSchedulesRepository';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
+import moment, { Moment } from 'moment';
+import IUserSpecialtiesRepository from '@modules/users/repositories/IUserSpecialtiesRepository';
 
 interface IRequest {
     therapist_id: string;
@@ -11,7 +13,7 @@ interface IRequest {
 }
 
 type IResponse = Array<{
-    hour: number;
+    hour: string;
     available: boolean;
 }>;
 
@@ -21,7 +23,9 @@ class ListTherapistDayAvailabilityServices {
         @inject('UserSchedulesRepository')
         private userSchedulesRepository: IUserSchedulesRepository,
         @inject('AppointmentsRepository')
-        private appointmentsRepository: IAppointmentsRepository
+        private appointmentsRepository: IAppointmentsRepository,
+        @inject('UserSpecialtiesRepository')
+        private userSpecialtiesRepository: IUserSpecialtiesRepository
     ) { }
 
     public async execute({ therapist_id, day, month, year }: IRequest): Promise<IResponse> {
@@ -41,35 +45,91 @@ class ListTherapistDayAvailabilityServices {
             });
 
             const startHourMorning = (Number(userSchedules[0].start.split(':')[0]));
-            const endMinutesMorning = (userSchedules.length && Number(userSchedules[0].end.split(':')[1]));
-            const endHourMorning = ((endMinutesMorning > 30 ? Number(userSchedules[0].end.split(':')[0]) + 1 : Number(userSchedules[0].end.split(':')[0])));
-
+            const startMinutesMorning = (Number(userSchedules[0].start.split(':')[1]));
+            const endHourMorning = Number(userSchedules[0].end.split(':')[0]);
+            const endMinutesMorning = Number(userSchedules[0].end.split(':')[1]);
             const startHourAfternoon = (Number(userSchedules[1].start.split(':')[0]));
-            const endMinutesAfternoon = (userSchedules.length && Number(userSchedules[1].end.split(':')[1]));
-            const endHourAfternoon = ((endMinutesAfternoon >= 30 ? Number(userSchedules[1].end.split(':')[0]) + 1 : Number(userSchedules[1].end.split(':')[0])));
+            const startMinutesAfternoon = (Number(userSchedules[1].start.split(':')[1]));
+            const endHourAfternoon = Number(userSchedules[1].end.split(':')[0]);
+            const endMinutesAfternoon = Number(userSchedules[1].end.split(':')[1]);
 
-            const eachStartHour = Array.from({
-                length: endHourMorning - startHourMorning
-            }, (_, index) => index + startHourMorning);
+            const hoursAvailable: string[] = [];
+            let dateMoment: Moment;
+            let dateMomentMinutes: Moment;
 
-            const eachEndHour = Array.from({
-                length: endHourAfternoon - startHourAfternoon
-            }, (_, index) => index + startHourAfternoon);
+            for (let hourMorning = startHourMorning; hourMorning < (endMinutesMorning > 0 ? endHourMorning + 1 : endHourMorning); hourMorning++) {
+                dateMoment = moment().hour(hourMorning).minute(startMinutesMorning > 0 ? startMinutesMorning : 0);
+                dateMomentMinutes = moment().hour(hourMorning).minute(startMinutesMorning > 0 ? 0 : 30);
 
-            const availableHours = [...eachStartHour, ...eachEndHour];
+                if (startMinutesMorning > 0) dateMomentMinutes = moment().hour(hourMorning + 1).minute(0);
 
-            const availability = availableHours.map(hour => {
-                const hasAppointmentInHour = appointments.find(appointment => {
-                    return getHours(appointment.date) === hour;
-                });
+                hoursAvailable.push(moment(dateMoment).format("HH:mm"));
+                hoursAvailable.push(moment(dateMomentMinutes).format("HH:mm"));
+            }
+
+            if (startMinutesMorning > 0) hoursAvailable.pop();
+            if (endMinutesMorning > 0) hoursAvailable.pop();
+
+            for (let hourAfternoon = startHourAfternoon; hourAfternoon < (endMinutesAfternoon > 0 ? endHourAfternoon + 1 : endHourAfternoon); hourAfternoon++) {
+                dateMoment = moment().hour(hourAfternoon).minute(startMinutesAfternoon > 0 ? startMinutesAfternoon : 0);
+                dateMomentMinutes = moment().hour(hourAfternoon).minute(startMinutesAfternoon > 0 ? 0 : 30);
+
+                if (startMinutesAfternoon > 0) dateMomentMinutes = moment().hour(hourAfternoon + 1).minute(0);
+
+                hoursAvailable.push(moment(dateMoment).format("HH:mm"));
+                hoursAvailable.push(moment(dateMomentMinutes).format("HH:mm"));
+            }
+
+            if (startMinutesAfternoon > 0) hoursAvailable.pop();
+            if (endMinutesAfternoon > 0) hoursAvailable.pop();
+
+            const availabilityHours: IResponse = [];
+
+            const hoursAppointments = appointments.map(appointment => {
+                const hourAppointment = getHours(appointment.date);
+                const minutesAppointment = getMinutes(appointment.date);
 
                 return {
-                    hour,
-                    available: !hasAppointmentInHour
-                };
+                    hour: hourAppointment.toString().padStart(2, '0') + ':' + minutesAppointment.toString().padStart(2, '0'),
+                    specialtie_id: appointment.specialtie_id,
+                    therapist_id: appointment.therapist_id,
+                    date: appointment.date
+                }
             });
 
-            return availability;
+            for (const hourAppointment of hoursAppointments) {
+                const serviceTimeSpecialtie = await this.userSpecialtiesRepository.getTimeSpecialtie({ user_id: hourAppointment.therapist_id, specialtie_id: hourAppointment.specialtie_id });
+                const finalAppointmentHour = addMinutes(hourAppointment.date, serviceTimeSpecialtie);
+                const finalHour = getHours(finalAppointmentHour);
+                const finalMinutes = getMinutes(finalAppointmentHour);
+                const stringFinalHour = finalHour.toString().padStart(2, '0') + ':' + finalMinutes.toString().padStart(2, '0');
+
+                for (const hour of hoursAvailable) {
+                    const hourAvailable = hour === hourAppointment.hour || hour <= stringFinalHour && hour >= hourAppointment.hour;
+
+                    if (hourAvailable) {
+                        availabilityHours.push({ hour, available: !hourAvailable });
+                    }
+                }
+            }
+
+            for (const hour of hoursAvailable) {
+                const haveHour = availabilityHours.some(availabilityHour => {
+                    return availabilityHour.hour === hour;
+                });
+
+                if (!haveHour) {
+                    availabilityHours.push({ hour, available: true });
+                }
+            }
+
+            return availabilityHours.sort((appointmentA, appointmentB) => {
+                if (appointmentA.hour < appointmentB.hour) {
+                    return -1;
+                }
+
+                return 0;
+            });
         }
 
         return [];

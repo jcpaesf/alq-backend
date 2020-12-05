@@ -3,6 +3,7 @@ import UserSpecialtie from '../entities/UserSpecialtie';
 import ICreateUserSpecialtieDTO from '@modules/users/dtos/ICreateUserSpecialtieDTO';
 import IUserSpecialtiesRepository from '@modules/users/repositories/IUserSpecialtiesRepository';
 import IFindSpecialtieInUserDTO from '@modules/users/dtos/IFindSpecialtieInUserDTO';
+import IGetTimeSpecialtieDTO from '@modules/users/dtos/IGetTimeSpecialtieDTO';
 
 class UserSpecialtiesRepository implements IUserSpecialtiesRepository {
     private ormRepository: Repository<UserSpecialtie>;
@@ -37,6 +38,16 @@ class UserSpecialtiesRepository implements IUserSpecialtiesRepository {
         });
 
         return !!userSpecialtie;
+    }
+
+    public async getTimeSpecialtie({ user_id, specialtie_id }: IGetTimeSpecialtieDTO): Promise<number> {
+        const userSpecialtie = await this.ormRepository.findOne({
+            where: { specialtie_id, user_id }
+        });
+
+        if (!userSpecialtie) return 0;
+
+        return userSpecialtie.service_time;
     }
 
     public async create(dto: ICreateUserSpecialtieDTO): Promise<UserSpecialtie> {
