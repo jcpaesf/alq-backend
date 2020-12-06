@@ -44,7 +44,6 @@ class User {
     work_online: boolean;
 
     @Column('varchar')
-    @Exclude()
     type: TypeUser;
 
     @Column('boolean')
