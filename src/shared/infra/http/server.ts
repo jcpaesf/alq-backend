@@ -9,7 +9,8 @@ import routes from './routes';
 import rateLimiter from './middlewares/rateLimiter';
 import '@shared/infra/typeorm';
 import '@shared/container';
-import socket from 'socket.io';
+//import socket from 'socket.io';
+import socketChatConnect from './socketChat/index';
 
 const app = express();
 
@@ -33,64 +34,66 @@ app.use((err: Error, request: Request, response: Response, next: NextFunction) =
     });
 });
 
-interface IUserProps {
-    [key: string]: string[];
-}
+// interface IUserProps {
+//     [key: string]: string[];
+// }
 
-const users: IUserProps = {};
+// const users: IUserProps = {};
 
-interface ISocketRoomProps {
-    [key: string]: string;
-}
+// interface ISocketRoomProps {
+//     [key: string]: string;
+// }
 
-const socketToRoom: ISocketRoomProps = {};
+// const socketToRoom: ISocketRoomProps = {};
 
 const listen = app.listen(3333, () => {
     console.log('Server started on port 3333...');
 });
 
-const io = socket(listen, {
-    cors: {
-        origin: '*'
-    }
-});
+socketChatConnect(listen);
 
-io.on('connection', (socket: any) => {
-    socket.on('join room', (roomID: any) => {
-        if (users[roomID]) {
-            const length = users[roomID].length;
-            if (length === 4) {
-                socket.emit("room full");
-                return;
-            }
-            users[roomID].push(socket.id);
-        } else {
-            users[roomID] = [socket.id];
-        }
+// const io = socket(listen, {
+//     cors: {
+//         origin: '*'
+//     }
+// });
 
-        socketToRoom[socket.id] = roomID;
+// io.on('connection', (socket: any) => {
+//     socket.on('join room', (roomID: any) => {
+//         if (users[roomID]) {
+//             const length = users[roomID].length;
+//             if (length === 4) {
+//                 socket.emit("room full");
+//                 return;
+//             }
+//             users[roomID].push(socket.id);
+//         } else {
+//             users[roomID] = [socket.id];
+//         }
 
-        const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
+//         socketToRoom[socket.id] = roomID;
 
-        socket.emit("all users", usersInThisRoom);
-    });
+//         const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
 
-    socket.on("sending signal", (payload: any) => {
-        io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
-    });
+//         socket.emit("all users", usersInThisRoom);
+//     });
 
-    socket.on("returning signal", (payload: any) => {
-        io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
-    });
+//     socket.on("sending signal", (payload: any) => {
+//         io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
+//     });
 
-    socket.on('disconnect', () => {
-        const roomID = socketToRoom[socket.id];
+//     socket.on("returning signal", (payload: any) => {
+//         io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
+//     });
 
-        let room = users[roomID];
+//     socket.on('disconnect', () => {
+//         const roomID = socketToRoom[socket.id];
 
-        if (room) {
-            room = room.filter(id => id !== socket.id);
-            users[roomID] = room;
-        }
-    });
-});
+//         let room = users[roomID];
+
+//         if (room) {
+//             room = room.filter(id => id !== socket.id);
+//             users[roomID] = room;
+//         }
+//     });
+// });
