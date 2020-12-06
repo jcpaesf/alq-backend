@@ -11,4 +11,5 @@ export default interface IUserSchedulesRepository {
     findAllDayFromTherapist(dto: IFindAllDayFromTherapistDTO): Promise<UserSchedule[]>;
     create(dto: ICreateUserScheduleDTO): Promise<UserSchedule>;
     save(userSchedule: UserSchedule): Promise<UserSchedule>;
+    delete(id: string): Promise<void>;
 }

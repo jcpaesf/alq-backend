@@ -60,15 +60,10 @@ class CreateUserServices {
     ) { }
 
     public async execute(userDto: IRequest): Promise<User> {
-        let specialties: UserSpecialtie[] = [];
         const checkUserEmailExists = await this.usersRepository.findByEmail(userDto.email);
 
         if (checkUserEmailExists) {
             throw new AppError('E-mail já cadastrado');
-        }
-
-        if (userDto.type === 'therapist' && !userDto.specialties?.length) {
-            throw new AppError('Informe as especialidades do terapeuta');
         }
 
         const hashedPassword = await this.hashProvider.generateHash(userDto.password);
@@ -88,25 +83,6 @@ class CreateUserServices {
             aproved: (userDto.type === 'user' || userDto.type === 'admin' ? true : false),
             confirm_email: (userDto.type === 'admin' ? true : false)
         });
-
-        if (userDto.specialties?.length) {
-            for (const userSpecialties of userDto.specialties) {
-                const specialtie = await this.specialtiesRepository.findById(userSpecialties.id);
-
-                if (!specialtie) {
-                    throw new AppError('Especialidade inválida');
-                }
-
-                const userSpecialtie = await this.userSpecialtiesRepository.create({
-                    user_id: user.id,
-                    specialtie_id: specialtie.id
-                });
-
-                specialties.push(userSpecialtie);
-            }
-
-            Object.assign(user, { specialties });
-        }
 
         // const confirmEmailTemplate = path.resolve(__dirname, '..', 'views', 'confirm_email.hbs');
         // const userToken = await this.usersTokenRepository.generate(user.id);

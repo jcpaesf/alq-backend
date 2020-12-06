@@ -79,6 +79,12 @@ class UserSchedulesRepository implements IUserSchedulesRepository {
     public async save(userSchedule: UserSchedule): Promise<UserSchedule> {
         return await this.ormRepository.save(userSchedule);
     }
+
+    public async delete(id: string): Promise<void> {
+        await this.ormRepository.delete({
+            id
+        });
+    }
 }
 
 export default UserSchedulesRepository;

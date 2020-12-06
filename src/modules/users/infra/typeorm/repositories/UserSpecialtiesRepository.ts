@@ -4,6 +4,7 @@ import ICreateUserSpecialtieDTO from '@modules/users/dtos/ICreateUserSpecialtieD
 import IUserSpecialtiesRepository from '@modules/users/repositories/IUserSpecialtiesRepository';
 import IFindSpecialtieInUserDTO from '@modules/users/dtos/IFindSpecialtieInUserDTO';
 import IGetTimeSpecialtieDTO from '@modules/users/dtos/IGetTimeSpecialtieDTO';
+import IFindSpecialtiesByUserIdDTO from '@modules/users/dtos/IFindSpecialtiesByUserIdDTO';
 
 class UserSpecialtiesRepository implements IUserSpecialtiesRepository {
     private ormRepository: Repository<UserSpecialtie>;
@@ -24,9 +25,10 @@ class UserSpecialtiesRepository implements IUserSpecialtiesRepository {
         return userSpecialtie;
     }
 
-    public async findByUserId(user_id: string): Promise<UserSpecialtie[]> {
+    public async findByUserId({ user_id, relations }: IFindSpecialtiesByUserIdDTO): Promise<UserSpecialtie[]> {
         const userSpecialties = await this.ormRepository.find({
-            where: { user_id }
+            where: { user_id },
+            relations
         });
 
         return userSpecialties;
