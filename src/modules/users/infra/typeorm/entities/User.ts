@@ -37,6 +37,9 @@ class User {
     @Column('varchar')
     state: string;
 
+    @Column('varchar')
+    street: string;
+
     @Column('boolean')
     work_presential: boolean;
 

@@ -13,6 +13,7 @@ interface IRequest {
     neighborhood: string;
     postal_code: string;
     state: string;
+    street: string;
     work_presential: boolean;
     work_online: boolean;
     active: boolean;
@@ -34,6 +35,7 @@ class UpdateUserServices {
         neighborhood,
         postal_code,
         state,
+        street,
         work_presential,
         work_online,
         active
@@ -57,6 +59,7 @@ class UpdateUserServices {
         if (neighborhood) user.neighborhood = neighborhood;
         if (postal_code) user.postal_code = postal_code;
         if (state) user.state = state;
+        if (street) user.street = street;
 
         user.work_presential = work_presential;
         user.work_online = work_online;

@@ -27,6 +27,7 @@ export default class UsersController {
             neighborhood,
             postal_code,
             state,
+            street,
             work_presential,
             work_online,
             type,
@@ -43,6 +44,7 @@ export default class UsersController {
             neighborhood,
             postal_code,
             state,
+            street,
             work_presential,
             work_online,
             type,
@@ -64,6 +66,7 @@ export default class UsersController {
             neighborhood,
             postal_code,
             state,
+            street,
             work_presential,
             work_online,
             active
@@ -78,6 +81,7 @@ export default class UsersController {
             neighborhood,
             postal_code,
             state,
+            street,
             work_presential,
             work_online,
             active

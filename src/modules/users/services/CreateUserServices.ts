@@ -30,6 +30,7 @@ interface IRequest {
     neighborhood: string;
     postal_code: string;
     state: string;
+    street: string;
     work_presential: boolean;
     work_online: boolean;
     type: TypeUser;
@@ -77,6 +78,7 @@ class CreateUserServices {
             phone: userDto.phone,
             postal_code: userDto.postal_code,
             state: userDto.state,
+            street: userDto.street,
             work_online: userDto.work_online,
             work_presential: userDto.work_presential,
             type: userDto.type,

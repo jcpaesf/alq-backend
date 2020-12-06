@@ -13,6 +13,7 @@ export default interface ICreateUserDTO {
     neighborhood: string;
     postal_code: string;
     state: string;
+    street: string;
     work_presential: boolean;
     work_online: boolean;
     type: TypeUser;
