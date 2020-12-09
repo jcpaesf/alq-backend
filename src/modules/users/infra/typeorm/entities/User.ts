@@ -49,6 +49,9 @@ class User {
     @Column('varchar')
     type: TypeUser;
 
+    @Column('varchar')
+    status: string;
+
     @Column('boolean')
     @Exclude()
     aproved: boolean;
