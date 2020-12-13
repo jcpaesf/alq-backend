@@ -4,3 +4,5 @@ function secondsToHour(seconds: number) {
 
     return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2);
 }
+
+export default secondsToHour
