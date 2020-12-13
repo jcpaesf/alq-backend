@@ -6,8 +6,8 @@ import SpecialtiesController from '../controllers/SpecialtiesController';
 const specialtiesRouter = Router();
 const specialtiesController = new SpecialtiesController();
 
-specialtiesRouter.get('/', ensureAuthenticated, specialtiesController.index);
-specialtiesRouter.get('/:id', ensureAuthenticated, specialtiesController.index);
+specialtiesRouter.get('/', specialtiesController.index);
+specialtiesRouter.get('/:id', specialtiesController.index);
 specialtiesRouter.post('/', ensureAuthenticated, specialtiesController.create);
 specialtiesRouter.put('/:id', ensureAuthenticated, specialtiesController.update);
 
