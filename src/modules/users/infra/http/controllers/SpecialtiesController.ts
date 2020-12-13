@@ -5,10 +5,9 @@ import { container } from 'tsyringe';
 export default class SpecialtiesController {
     public async index(request: Request, response: Response): Promise<Response> {
         const specialtie_id = request.params.id;
-        const auth_user = request.user.id;
         const specialtieServices = container.resolve(SpecialtieServices);
 
-        const specialtie = await specialtieServices.index(specialtie_id, auth_user);
+        const specialtie = await specialtieServices.index(specialtie_id);
 
         return response.json(specialtie);
     }

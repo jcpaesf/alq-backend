@@ -15,17 +15,7 @@ class SpecialtiesServices {
         private usersRepository: IUsersRepository
     ) { }
 
-    public async index(id: string, auth_user: string): Promise<Specialtie[] | Specialtie> {
-        const user = await this.usersRepository.findById(auth_user);
-
-        if (!user) {
-            throw new AppError('Usuário não autenticado');
-        }
-
-        if (user.type !== 'admin') {
-            throw new AppError('Usuário não é administrador');
-        }
-
+    public async index(id: string): Promise<Specialtie[] | Specialtie> {
         let specialtie: Specialtie[] | Specialtie | undefined;
 
         if (id) {
