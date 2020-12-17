@@ -41,6 +41,12 @@ class UserEnvironmentsRepository implements IUserEnvironmentsRepository {
     public async save(userEnvironment: UserEnvironment): Promise<UserEnvironment> {
         return await this.ormRepository.save(userEnvironment);
     }
+
+    public async delete(id: string): Promise<void> {
+        await this.ormRepository.delete({
+            id
+        });
+    }
 }
 
 export default UserEnvironmentsRepository;

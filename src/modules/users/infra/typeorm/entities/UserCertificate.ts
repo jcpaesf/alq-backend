@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Exclude } from 'class-transformer';
 import {
     Entity,
     Column,
@@ -21,6 +21,7 @@ class UserCertificate {
     file: string;
 
     @Column('uuid')
+    @Exclude()
     user_id: string;
 
     @OneToOne(() => User)
@@ -28,9 +29,11 @@ class UserCertificate {
     user: User;
 
     @CreateDateColumn()
+    @Exclude()
     created_at: Date;
 
     @UpdateDateColumn()
+    @Exclude()
     updated_at: Date;
 
     @Expose({ name: 'file_url' })

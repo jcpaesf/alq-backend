@@ -41,6 +41,12 @@ class UserCertificatesRepository implements IUserCertificatesRepository {
     public async save(userCertificate: UserCertificate): Promise<UserCertificate> {
         return await this.ormRepository.save(userCertificate);
     }
+
+    public async delete(id: string): Promise<void> {
+        await this.ormRepository.delete({
+            id
+        });
+    }
 }
 
 export default UserCertificatesRepository;

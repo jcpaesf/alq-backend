@@ -7,4 +7,5 @@ export default interface IUserEnvironmentsRepository {
     findByUserId(user_id: string): Promise<UserEnvironment[]>;
     create(dto: ICreateUserEnvironmentDTO): Promise<UserEnvironment>;
     save(UserEnvironment: UserEnvironment): Promise<UserEnvironment>;
+    delete(id: string): Promise<void>;
 }

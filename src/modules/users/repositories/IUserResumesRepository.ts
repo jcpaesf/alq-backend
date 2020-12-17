@@ -7,4 +7,5 @@ export default interface IUserResumesRepository {
     findByUserId(user_id: string): Promise<UserResume[]>;
     create(dto: ICreateUserResumeDTO): Promise<UserResume>;
     save(UserResume: UserResume): Promise<UserResume>;
+    delete(id: string): Promise<void>;
 }

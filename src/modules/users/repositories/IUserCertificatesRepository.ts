@@ -7,4 +7,5 @@ export default interface IUserCertificatesRepository {
     findByUserId(user_id: string): Promise<UserCertificate[]>;
     create(dto: ICreateUserCertificateDTO): Promise<UserCertificate>;
     save(UserCertificate: UserCertificate): Promise<UserCertificate>;
+    delete(id: string): Promise<void>;
 }

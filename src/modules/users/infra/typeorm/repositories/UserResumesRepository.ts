@@ -41,6 +41,12 @@ class UserResumesRepository implements IUserResumesRepository {
     public async save(userResume: UserResume): Promise<UserResume> {
         return await this.ormRepository.save(userResume);
     }
+
+    public async delete(id: string): Promise<void> {
+        await this.ormRepository.delete({
+            id
+        });
+    }
 }
 
 export default UserResumesRepository;
