@@ -5,6 +5,7 @@ import { String } from 'aws-sdk/clients/cloudsearch';
 
 interface IResponse {
     id: string;
+    specialtie_id: string;
     description: string;
     service_time: String;
 }
@@ -21,7 +22,8 @@ class SelectTherapistSpecialtiesServices {
 
         const specialties = userSpecialties.map(userSpecialtie => {
             return {
-                id: userSpecialtie.specialtie_id,
+                id: userSpecialtie.id,
+                specialtie_id: userSpecialtie.specialtie_id,
                 description: userSpecialtie.specialtie.description,
                 service_time: convertSecondsToHour(userSpecialtie.service_time)
             }
