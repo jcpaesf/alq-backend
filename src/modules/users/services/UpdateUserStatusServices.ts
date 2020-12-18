@@ -22,7 +22,7 @@ class UpdateUserStatusServices {
             throw new AppError('Usuário não encontrado');
         }
 
-        if (user_auth.type !== 'admin' && (status === 'analyzing' || status === 'approved' || status === 'declined')) {
+        if (user_auth.type !== 'admin' && (status === 'approved' || status === 'declined')) {
             throw new AppError('Usuário logado não é administrador');
         }
 
