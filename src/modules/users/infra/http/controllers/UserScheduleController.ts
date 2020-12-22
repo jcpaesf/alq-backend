@@ -9,8 +9,9 @@ export default class UserScheduleController {
     public async index(request: Request, response: Response): Promise<Response> {
         const selectUserScheduleServices = container.resolve(SelectUserScheduleServices);
         const user_id = request.user.id;
+        const { year, month } = request.query;
 
-        const userSchedules = await selectUserScheduleServices.execute(user_id);
+        const userSchedules = await selectUserScheduleServices.execute({ year: Number(year), month: Number(month), user_id });
 
         return response.json(userSchedules);
     }
