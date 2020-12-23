@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { getDaysInMonth, getDate } from 'date-fns';
+import { getDaysInMonth, getDate, isBefore } from 'date-fns';
 import IUserSchedulesRepository from '@modules/users/repositories/IUserSchedulesRepository';
 
 interface IRequest {
@@ -29,6 +29,7 @@ class ListTherapistMonthAvailabilityServices {
         });
 
         const daysInMonth = getDaysInMonth(new Date(year, month - 1));
+        const currentDate = new Date();
 
         const eachDayArray = Array.from(
             { length: daysInMonth },
@@ -37,6 +38,10 @@ class ListTherapistMonthAvailabilityServices {
 
         const availableDays = eachDayArray.map(day => {
             const userScheduleInDay = userSchedules.some(schedule => {
+                if (isBefore(schedule.service_date, currentDate)) {
+                    return false;
+                }
+
                 return getDate(schedule.service_date) === day;
             });
 
