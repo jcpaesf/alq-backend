@@ -45,10 +45,6 @@ class AuthenticateUserServices {
             throw new AppError('E-mail não confirmado');
         }
 
-        if (!user.aproved) {
-            throw new AppError('Cadastro não aprovado');
-        }
-
         if (!user.active) {
             throw new AppError('Usuário não está ativo');
         }
