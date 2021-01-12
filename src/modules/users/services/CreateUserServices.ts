@@ -86,23 +86,23 @@ class CreateUserServices {
             confirm_email: (userDto.type === 'admin' ? true : false)
         });
 
-        // const confirmEmailTemplate = path.resolve(__dirname, '..', 'views', 'confirm_email.hbs');
-        // const userToken = await this.usersTokenRepository.generate(user.id);
+        const confirmEmailTemplate = path.resolve(__dirname, '..', 'views', 'confirm_email.hbs');
+        const userToken = await this.usersTokenRepository.generate(user.id);
 
-        // await this.mailProvider.sendMail({
-        //     to: {
-        //         name: user.name,
-        //         email: user.email
-        //     },
-        //     subject: '[Alquimia do Coração] Confirmação de e-mail',
-        //     templateData: {
-        //         file: confirmEmailTemplate,
-        //         variables: {
-        //             name: user.name,
-        //             link: `${process.env.APP_WEB_URL}/confirm_email?token=${userToken.token}&email=${user.email}`
-        //         }
-        //     }
-        // });
+        await this.mailProvider.sendMail({
+            to: {
+                name: user.name,
+                email: user.email
+            },
+            subject: '[Alquimia do Coração] Confirmação de e-mail',
+            templateData: {
+                file: confirmEmailTemplate,
+                variables: {
+                    name: user.name,
+                    link: `${process.env.APP_WEB_URL}/email-verification?token=${userToken.token}&email=${user.email}`
+                }
+            }
+        });
 
         return classToClass(user);
     }
