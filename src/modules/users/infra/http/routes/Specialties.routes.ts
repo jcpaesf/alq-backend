@@ -10,5 +10,6 @@ specialtiesRouter.get('/', specialtiesController.index);
 specialtiesRouter.get('/:id', specialtiesController.index);
 specialtiesRouter.post('/', ensureAuthenticated, specialtiesController.create);
 specialtiesRouter.put('/:id', ensureAuthenticated, specialtiesController.update);
+specialtiesRouter.delete('/:id', ensureAuthenticated, specialtiesController.delete);
 
 export default specialtiesRouter;

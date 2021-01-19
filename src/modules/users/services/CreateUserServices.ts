@@ -34,8 +34,8 @@ interface IRequest {
     work_presential: boolean;
     work_online: boolean;
     type: TypeUser;
-    aproved: boolean;
     specialties?: ISpecialtieDTO[];
+    description: string;
 }
 
 @injectable()
@@ -51,13 +51,7 @@ class CreateUserServices {
         private mailProvider: IMailProvider,
 
         @inject('UsersTokenRepository')
-        private usersTokenRepository: IUsersTokenRepository,
-
-        @inject('UserSpecialtiesRepository')
-        private userSpecialtiesRepository: IUserSpecialtiesRepository,
-
-        @inject('SpecialtiesRepository')
-        private specialtiesRepository: ISpecialtiesRepository
+        private usersTokenRepository: IUsersTokenRepository
     ) { }
 
     public async execute(userDto: IRequest): Promise<User> {
@@ -65,6 +59,10 @@ class CreateUserServices {
 
         if (checkUserEmailExists) {
             throw new AppError('E-mail já cadastrado');
+        }
+
+        if (userDto.type !== 'therapist' && userDto.type !== 'user' && userDto.type !== 'admin') {
+            throw new AppError('Tipo de usuário inválido');
         }
 
         const hashedPassword = await this.hashProvider.generateHash(userDto.password);
@@ -82,8 +80,8 @@ class CreateUserServices {
             work_online: userDto.work_online,
             work_presential: userDto.work_presential,
             type: userDto.type,
-            aproved: (userDto.type === 'user' || userDto.type === 'admin' ? true : false),
-            confirm_email: (userDto.type === 'admin' ? true : false)
+            confirm_email: (userDto.type === 'admin' ? true : false),
+            description: userDto.description
         });
 
         const confirmEmailTemplate = path.resolve(__dirname, '..', 'views', 'confirm_email.hbs');

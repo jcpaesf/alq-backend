@@ -49,12 +49,23 @@ class User {
     @Column('varchar')
     type: TypeUser;
 
+    @Expose({ name: 'type_string' })
+    getTypeString(): string {
+        switch (this.type) {
+            case 'admin':
+                return 'Administrador';
+            case 'user':
+                return 'Cliente';
+            case 'therapist':
+                return 'Terapeuta';
+            default:
+                return 'Tipo não encontrado';
+        }
+
+    }
+
     @Column('varchar')
     status: string;
-
-    @Column('boolean')
-    @Exclude()
-    aproved: boolean;
 
     @Column('boolean')
     @Exclude()
@@ -72,6 +83,9 @@ class User {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    @Column('varchar')
+    description: string;
 
     @Expose({ name: 'avatar_url' })
     getAvatarUrl(): string | null {

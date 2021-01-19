@@ -17,6 +17,7 @@ interface IRequest {
     work_presential: boolean;
     work_online: boolean;
     active: boolean;
+    description: string;
 }
 
 @injectable()
@@ -38,7 +39,8 @@ class UpdateUserServices {
         street,
         work_presential,
         work_online,
-        active
+        active,
+        description
     }: IRequest): Promise<User> {
         const user = await this.usersRepository.findById(id);
 
@@ -60,6 +62,7 @@ class UpdateUserServices {
         if (postal_code) user.postal_code = postal_code;
         if (state) user.state = state;
         if (street) user.street = street;
+        if (description) user.description = description;
 
         user.work_presential = work_presential;
         user.work_online = work_online;

@@ -6,7 +6,6 @@ import uploadConfig from '@config/upload';
 import UsersController from '../controllers/UsersController';
 import UserAvatarController from '../controllers/UserAvatarController';
 import ConfirmEmailController from '../controllers/ConfirmEmailController';
-import UserAprovedController from '../controllers/UserAprovedController';
 import UserStatusController from '../controllers/UserStatusController';
 
 const usersRouter = Router();
@@ -14,7 +13,6 @@ const upload = multer(uploadConfig.multer);
 const usersController = new UsersController();
 const userAvatarController = new UserAvatarController();
 const confirmEmailController = new ConfirmEmailController();
-const userAprovedController = new UserAprovedController();
 const userStatusController = new UserStatusController();
 
 usersRouter.get('/', ensureAuthenticated, usersController.index);
@@ -23,7 +21,6 @@ usersRouter.post('/', usersController.create);
 usersRouter.put('/', ensureAuthenticated, usersController.update);
 usersRouter.patch('/avatar/:id', upload.single('avatar'), userAvatarController.update);
 usersRouter.patch('/confirm', confirmEmailController.update);
-usersRouter.patch('/:id/approve', ensureAuthenticated, userAprovedController.update);
 usersRouter.patch('/:id/status', ensureAuthenticated, userStatusController.update);
 
 export default usersRouter;

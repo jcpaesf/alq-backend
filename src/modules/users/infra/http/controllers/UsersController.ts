@@ -31,8 +31,8 @@ export default class UsersController {
             work_presential,
             work_online,
             type,
-            aproved,
-            specialties
+            specialties,
+            description
         } = request.body;
 
         const user = await createUserServices.execute({
@@ -48,8 +48,8 @@ export default class UsersController {
             work_presential,
             work_online,
             type,
-            aproved,
-            specialties
+            specialties,
+            description
         });
 
         return response.json(user);
@@ -69,7 +69,8 @@ export default class UsersController {
             street,
             work_presential,
             work_online,
-            active
+            active,
+            description
         } = request.body;
 
         const user = await updateUserServices.execute({
@@ -84,7 +85,8 @@ export default class UsersController {
             street,
             work_presential,
             work_online,
-            active
+            active,
+            description
         });
 
         return response.json(user);

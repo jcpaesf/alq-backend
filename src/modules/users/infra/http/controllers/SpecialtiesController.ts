@@ -32,4 +32,14 @@ export default class SpecialtiesController {
 
         return response.json(specialtie);
     }
+
+    public async delete(request: Request, response: Response): Promise<Response> {
+        const specialtieServices = container.resolve(SpecialtieServices);
+        const auth_user = request.user.id;
+        const id = request.params.id;
+
+        await specialtieServices.delete({ auth_user, id });
+
+        return response.status(204).json();
+    }
 }

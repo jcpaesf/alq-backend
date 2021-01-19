@@ -3,7 +3,6 @@ enum TypeUser {
     Therapist = 'therapist',
     Admin = 'admin'
 }
-
 export default interface ICreateUserDTO {
     name: string;
     email: string;
@@ -17,6 +16,6 @@ export default interface ICreateUserDTO {
     work_presential: boolean;
     work_online: boolean;
     type: TypeUser;
-    aproved: boolean;
     confirm_email: boolean;
+    description: string;
 }

@@ -58,6 +58,24 @@ class AppointmentsRepository implements IAppointmentsRepository {
         return appointments;
     }
 
+    public async getTotalAppointments(): Promise<number> {
+        const totalAppointments = await this.ormRepository.count();
+
+        return totalAppointments;
+    }
+
+    public async getTotalAppointments30Days(): Promise<number> {
+        const totalAppointments30Days = await this.ormRepository.count({
+            where: {
+                created_at: Raw(dateFieldName =>
+                    `to_date(to_char(${dateFieldName}, 'DD-MM-YYYY'), 'DD-MM-YYYY') >= to_date(to_char((current_date - 30), 'DD-MM-YYYY'), 'DD-MM-YYYY')`
+                )
+            }
+        });
+
+        return totalAppointments30Days;
+    }
+
     public async create(dto: ICreateAppointmentDTO): Promise<Appointment> {
         const appointment = this.ormRepository.create(dto);
 

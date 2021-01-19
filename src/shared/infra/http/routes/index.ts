@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import UsersRouter from '@modules/users/infra/http/routes/Users.routes';
 import SessionsRouter from '@modules/users/infra/http/routes/Sessions.routes';
+import DashboardRouter from '@modules/dashboard/infra/http/routes/Dashboard.routes';
 import UsersTokenRouter from '@modules/users/infra/http/routes/UsersToken.routes';
 import TherapistsRouter from '@modules/appointments/infra/http/routes/Therapists.routes';
 import SpecialtiesRouter from '@modules/users/infra/http/routes/Specialties.routes';
@@ -17,6 +18,7 @@ const routes = Router();
 routes.use('/users', UsersRouter);
 routes.use('/sessions', SessionsRouter);
 routes.use('/password', UsersTokenRouter);
+routes.use('/dashboard', DashboardRouter);
 routes.use('/therapists', TherapistsRouter);
 routes.use('/specialties', SpecialtiesRouter);
 routes.use('/userresumes', UserResumesRouter);

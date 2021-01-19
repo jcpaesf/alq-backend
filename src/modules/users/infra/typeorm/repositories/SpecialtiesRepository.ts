@@ -35,6 +35,12 @@ class SpecialtiesRepository implements ISpecialtiesRepository {
         return await this.ormRepository.save(specialtie);
     }
 
+    public async delete(id: string): Promise<void> {
+        await this.ormRepository.delete({
+            id
+        });
+    }
+
 }
 
 export default SpecialtiesRepository;

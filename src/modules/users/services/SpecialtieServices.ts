@@ -4,6 +4,7 @@ import ICreateSpecialtieDTO from '../dtos/ICreateSpecialtieDTO';
 import IUpdateSpecialtieDTO from '../dtos/IUpdateSpecialtieDTO';
 import Specialtie from '../infra/typeorm/entities/Specialtie';
 import ISpecialtiesRepository from '../repositories/ISpecialtiesRepository';
+import IDeleteSpecialtieDTO from '../dtos/IDeleteSpecialtieDTO';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 @injectable()
@@ -72,6 +73,20 @@ class SpecialtiesServices {
         await this.specialtiesRepository.save(specialtie);
 
         return specialtie;
+    }
+
+    public async delete(dto: IDeleteSpecialtieDTO): Promise<void> {
+        const user = await this.usersRepository.findById(dto.auth_user);
+
+        if (!user) {
+            throw new AppError('Usuário não autenticado');
+        }
+
+        if (user.type !== 'admin') {
+            throw new AppError('Usuário não é administrador');
+        }
+
+        await this.specialtiesRepository.delete(dto.id);
     }
 }
 
