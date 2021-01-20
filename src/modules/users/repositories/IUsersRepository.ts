@@ -1,8 +1,10 @@
 import User from '../infra/typeorm/entities/User';
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
+import IUsersFindDTO from '../dtos/IUsersFindDTO';
+import IFilterUsersDTO from '../dtos/IFilterUsersDTO';
 
 export default interface IUsersRepository {
-    find(): Promise<User[]>;
+    find(dto: IFilterUsersDTO): Promise<IUsersFindDTO>;
     getTotalUsers(): Promise<number>;
     getTotalUsers30Days(): Promise<number>;
     findTherapists(): Promise<User[]>;

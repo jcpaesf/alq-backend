@@ -38,7 +38,7 @@ class CreateAppointmentServices {
             throw new AppError('Agendamento só pode ser feito com um terapeuta');
         }
 
-        const userSpecialties = await this.userSpecialtiesRepository.findByUserId(therapist_id);
+        const userSpecialties = await this.userSpecialtiesRepository.findByUserId({ user_id: therapist_id, relations: [] });
 
         const existsSpecialties = userSpecialties.some(specialtie => {
             return specialtie.specialtie_id === specialtie_id;

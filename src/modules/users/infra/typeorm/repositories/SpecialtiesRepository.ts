@@ -1,6 +1,7 @@
 import { Repository, getRepository } from 'typeorm';
 import Specialtie from '../entities/Specialtie';
 import ICreateSpecialtieDTO from '@modules/users/dtos/ICreateSpecialtieDTO';
+import ISpecialtiesFindDTO from '@modules/users/dtos/ISpecialtiesFindDTO';
 import ISpecialtiesRepository from '@modules/users/repositories/ISpecialtiesRepository';
 
 class SpecialtiesRepository implements ISpecialtiesRepository {
@@ -11,10 +12,21 @@ class SpecialtiesRepository implements ISpecialtiesRepository {
         this.ormRepository = getRepository(Specialtie);
     }
 
-    public async find(): Promise<Specialtie[]> {
-        const specialties = await this.ormRepository.find();
+    public async find(page: number): Promise<ISpecialtiesFindDTO> {
+        const skip = page > 1 ? (page - 1) * 10 : 0;
 
-        return specialties;
+        const [specialties, total] = await this.ormRepository.findAndCount(
+            {
+                skip,
+                take: 10
+            }
+        );
+
+        return {
+            specialties,
+            total,
+            total_pages: Math.ceil(total / 10)
+        };
     }
 
     public async findById(id: string): Promise<Specialtie | undefined> {

@@ -9,8 +9,9 @@ export default class UsersController {
         const selectUserServices = container.resolve(SelectUserServices);
         const user_id = request.params.id;
         const user_auth = request.user.id;
+        const { page, type, name } = request.query;
 
-        const user = await selectUserServices.execute({ user_id, user_auth });
+        const user = await selectUserServices.execute({ user_id, user_auth, page: Number(page), type: type ? String(type) : 'user', name: name ? String(name) : '' });
 
         return response.json(user);
     }

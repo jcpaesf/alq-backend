@@ -6,8 +6,9 @@ export default class SpecialtiesController {
     public async index(request: Request, response: Response): Promise<Response> {
         const specialtie_id = request.params.id;
         const specialtieServices = container.resolve(SpecialtieServices);
+        const { page } = request.query;
 
-        const specialtie = await specialtieServices.index(specialtie_id);
+        const specialtie = await specialtieServices.index({ id: specialtie_id, page: Number(page) });
 
         return response.json(specialtie);
     }

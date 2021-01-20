@@ -1,8 +1,10 @@
-import { Repository, getRepository, Raw } from 'typeorm';
+import { Repository, getRepository, Raw, Like, } from 'typeorm';
 
 import User from '../entities/User';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import IUsersFindDTO from '@modules/users/dtos/IUsersFindDTO';
+import IFilterUsersDTO from '@modules/users/dtos/IFilterUsersDTO';
 
 class UsersRepository implements IUsersRepository {
     private ormRepository: Repository<User>;
@@ -11,12 +13,20 @@ class UsersRepository implements IUsersRepository {
         this.ormRepository = getRepository(User);
     }
 
-    public async find(): Promise<User[]> {
-        const users = await this.ormRepository.find({
-            where: { type: 'user' }
+    public async find({ page, nameFilter, typeFilter }: IFilterUsersDTO): Promise<IUsersFindDTO> {
+        const skip = page > 1 ? (page - 1) * 10 : 0;
+        
+        const [users, total] = await this.ormRepository.findAndCount({
+            where: { type: typeFilter, name: Raw(name => `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'`) },
+            skip,
+            take: 10
         });
 
-        return users;
+        return {
+            users,
+            total,
+            total_pages: Math.ceil(total / 10)
+        };
     }
 
     public async getTotalUsers(): Promise<number> {

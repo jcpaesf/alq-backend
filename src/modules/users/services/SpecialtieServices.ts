@@ -6,6 +6,12 @@ import Specialtie from '../infra/typeorm/entities/Specialtie';
 import ISpecialtiesRepository from '../repositories/ISpecialtiesRepository';
 import IDeleteSpecialtieDTO from '../dtos/IDeleteSpecialtieDTO';
 import IUsersRepository from '../repositories/IUsersRepository';
+import ISpecialtiesFindDTO from '../dtos/ISpecialtiesFindDTO';
+
+interface IRequest {
+    id: string;
+    page: number;
+}
 
 @injectable()
 class SpecialtiesServices {
@@ -16,8 +22,8 @@ class SpecialtiesServices {
         private usersRepository: IUsersRepository
     ) { }
 
-    public async index(id: string): Promise<Specialtie[] | Specialtie> {
-        let specialtie: Specialtie[] | Specialtie | undefined;
+    public async index({ id, page }: IRequest): Promise<ISpecialtiesFindDTO | Specialtie> {
+        let specialtie: Specialtie[] | Specialtie | undefined | ISpecialtiesFindDTO;
 
         if (id) {
             specialtie = await this.specialtiesRepository.findById(id);
@@ -29,7 +35,7 @@ class SpecialtiesServices {
             return specialtie;
         }
 
-        specialtie = await this.specialtiesRepository.find();
+        specialtie = await this.specialtiesRepository.find(page);
 
         return specialtie;
     }
