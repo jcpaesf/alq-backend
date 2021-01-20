@@ -61,11 +61,26 @@ class User {
             default:
                 return 'Tipo não encontrado';
         }
-
     }
 
     @Column('varchar')
     status: string;
+
+    @Expose({ name: 'status_string' })
+    getStatusString(): string {
+        switch (this.status) {
+            case '' || null:
+                return 'Pendente';
+            case 'analyzing':
+                return 'Analisando';
+            case 'approved':
+                return 'Aprovado';
+            case 'declinde':
+                return 'Reprovado';
+            default:
+                return 'Status não encontrado';
+        }
+    }
 
     @Column('boolean')
     @Exclude()
