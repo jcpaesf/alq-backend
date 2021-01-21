@@ -83,7 +83,6 @@ class User {
     }
 
     @Column('boolean')
-    @Exclude()
     active: boolean;
 
     @Column('boolean')
