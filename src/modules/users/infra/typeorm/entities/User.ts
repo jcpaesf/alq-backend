@@ -68,6 +68,8 @@ class User {
 
     @Expose({ name: 'status_string' })
     getStatusString(): string {
+        if (this.type !== 'therapist') return '';
+
         switch (this.status) {
             case '' || null:
                 return 'Pendente';
