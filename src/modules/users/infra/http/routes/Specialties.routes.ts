@@ -7,6 +7,7 @@ const specialtiesRouter = Router();
 const specialtiesController = new SpecialtiesController();
 
 specialtiesRouter.get('/', specialtiesController.index);
+specialtiesRouter.get('/all', specialtiesController.index);
 specialtiesRouter.get('/:id', specialtiesController.index);
 specialtiesRouter.post('/', ensureAuthenticated, specialtiesController.create);
 specialtiesRouter.put('/:id', ensureAuthenticated, specialtiesController.update);

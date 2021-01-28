@@ -36,6 +36,7 @@ interface IRequest {
     type: TypeUser;
     specialties?: ISpecialtieDTO[];
     description: string;
+    summary: string;
 }
 
 @injectable()
@@ -81,7 +82,8 @@ class CreateUserServices {
             work_presential: userDto.work_presential,
             type: userDto.type,
             confirm_email: (userDto.type === 'admin' ? true : false),
-            description: userDto.description
+            description: userDto.description,
+            summary: userDto.summary
         });
 
         const confirmEmailTemplate = path.resolve(__dirname, '..', 'views', 'confirm_email.hbs');

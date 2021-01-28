@@ -18,4 +18,5 @@ export default interface ICreateUserDTO {
     type: TypeUser;
     confirm_email: boolean;
     description: string;
+    summary: string;
 }

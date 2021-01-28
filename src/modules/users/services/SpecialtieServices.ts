@@ -22,7 +22,7 @@ class SpecialtiesServices {
         private usersRepository: IUsersRepository
     ) { }
 
-    public async index({ id, page }: IRequest): Promise<ISpecialtiesFindDTO | Specialtie> {
+    public async index({ id, page }: IRequest): Promise<ISpecialtiesFindDTO | Specialtie | Specialtie[]> {
         let specialtie: Specialtie[] | Specialtie | undefined | ISpecialtiesFindDTO;
 
         if (id) {

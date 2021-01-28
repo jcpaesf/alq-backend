@@ -103,6 +103,9 @@ class User {
     @Column('varchar')
     description: string;
 
+    @Column('varchar')
+    summary: string;
+
     @Expose({ name: 'avatar_url' })
     getAvatarUrl(): string | null {
         if (!this.avatar) {

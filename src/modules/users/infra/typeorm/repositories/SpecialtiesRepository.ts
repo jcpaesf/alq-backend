@@ -12,15 +12,20 @@ class SpecialtiesRepository implements ISpecialtiesRepository {
         this.ormRepository = getRepository(Specialtie);
     }
 
-    public async find(page: number): Promise<ISpecialtiesFindDTO> {
+    public async find(page: number): Promise<ISpecialtiesFindDTO | Specialtie[]> {
+        if (!page) {
+            return await this.ormRepository.find({
+                order: { description: 'ASC' }
+            });
+        }
+
         const skip = page > 1 ? (page - 1) * 10 : 0;
 
-        const [specialties, total] = await this.ormRepository.findAndCount(
-            {
-                skip,
-                take: 10
-            }
-        );
+        const [specialties, total] = await this.ormRepository.findAndCount({
+            skip,
+            take: 10,
+            order: { description: 'ASC' }
+        });
 
         return {
             specialties,
