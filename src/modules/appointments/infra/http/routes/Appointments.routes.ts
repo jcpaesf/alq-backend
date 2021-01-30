@@ -7,6 +7,7 @@ const appointmentsRouter = Router();
 const appointmentsController = new AppointmentsController();
 
 appointmentsRouter.get('/', ensureAuthenticated, appointmentsController.index);
+appointmentsRouter.get('/all', ensureAuthenticated, appointmentsController.indexAll);
 appointmentsRouter.post('/', ensureAuthenticated, appointmentsController.create);
 
 export default appointmentsRouter;
