@@ -7,7 +7,7 @@ export default interface IUsersRepository {
     find(dto: IFilterUsersDTO): Promise<IUsersFindDTO>;
     getTotalUsers(): Promise<number>;
     getTotalUsers30Days(): Promise<number>;
-    findTherapists(): Promise<User[]>;
+    findTherapists(dto: IFilterUsersDTO): Promise<IUsersFindDTO>;
     getTotalTherapists(): Promise<number>;
     getTotalTherapists30Days(): Promise<number>;
     getTotalTherapistsAnalyzing(): Promise<number>;

@@ -10,7 +10,7 @@ interface IRequest {
     user_auth: string;
     page: number;
     type: string;
-    name: string;
+    name?: string;
 }
 
 @injectable()

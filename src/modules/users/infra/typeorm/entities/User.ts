@@ -7,6 +7,12 @@ enum TypeUser {
 import uploadConfig from '@config/upload';
 import { Exclude, Expose } from 'class-transformer';
 
+interface UserSpecialtie {
+    id: string;
+    description: string;
+    service_time: number;
+}
+
 @Entity('users')
 class User {
     @PrimaryGeneratedColumn('uuid')
@@ -121,6 +127,8 @@ class User {
                 return null;
         }
     }
+
+    user_specialtie: UserSpecialtie[];
 }
 
 export default User;

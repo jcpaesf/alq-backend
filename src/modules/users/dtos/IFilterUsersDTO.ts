@@ -1,5 +1,7 @@
 export default interface IFilterUsersDTO {
+    id?: string;
     page: number;
-    nameFilter: string;
+    nameFilter?: string;
     typeFilter: string;
+    nameSpecialtie?: string;
 }

@@ -1,23 +1,26 @@
-import { Repository, getRepository, Raw, Like, } from 'typeorm';
+import { Repository, getRepository, Raw } from 'typeorm';
 
 import User from '../entities/User';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IUsersFindDTO from '@modules/users/dtos/IUsersFindDTO';
 import IFilterUsersDTO from '@modules/users/dtos/IFilterUsersDTO';
+import UserSpecialtie from '../entities/UserSpecialtie';
 
 class UsersRepository implements IUsersRepository {
     private ormRepository: Repository<User>;
+    private ormRepositoryUserSpecialtie: Repository<UserSpecialtie>;
 
     constructor() {
         this.ormRepository = getRepository(User);
+        this.ormRepositoryUserSpecialtie = getRepository(UserSpecialtie);
     }
 
     public async find({ page, nameFilter, typeFilter }: IFilterUsersDTO): Promise<IUsersFindDTO> {
         const skip = page > 1 ? (page - 1) * 10 : 0;
-        
+
         const [users, total] = await this.ormRepository.findAndCount({
-            where: { type: typeFilter, name: Raw(name => `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'`) },
+            where: { type: typeFilter, name: Raw(name => nameFilter ? `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'` : '') },
             skip,
             take: 10
         });
@@ -50,12 +53,47 @@ class UsersRepository implements IUsersRepository {
         return totalUsers30Days;
     }
 
-    public async findTherapists(): Promise<User[]> {
-        const users = await this.ormRepository.find({
-            where: { type: 'therapist' }
+    public async findTherapists({ id, page, nameFilter, nameSpecialtie }: IFilterUsersDTO): Promise<IUsersFindDTO> {
+        const skip = page > 1 ? (page - 1) * 10 : 0;
+
+        const [users, total] = await this.ormRepository.findAndCount({
+            where: {
+                type: 'therapist',
+                name: Raw(name => nameFilter ? `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'` : ''),
+                id: Raw(name => id ? `${name} = '${id}'` : '')
+            },
+            skip,
+            take: 10
         });
 
-        return users;
+        for (const user of users) {
+            const userSpecialties = await this.ormRepositoryUserSpecialtie.find({
+                where: { user_id: user.id },
+                relations: ['specialtie']
+            });
+
+            const userSpecialtie = userSpecialties.map(userSpc => {
+                return {
+                    id: userSpc.specialtie_id,
+                    description: userSpc.specialtie.description,
+                    service_time: userSpc.service_time
+                }
+            }).filter(userSpc => {
+                if (nameSpecialtie && userSpc.description.toLowerCase().indexOf(nameSpecialtie.toLowerCase()) !== -1) {
+                    return userSpc;
+                }
+
+                return userSpc;
+            });
+
+            user['user_specialtie'] = userSpecialtie;
+        }
+
+        return {
+            users: users.filter(user => nameSpecialtie ? user.user_specialtie.length : user),
+            total,
+            total_pages: Math.ceil(total / 10)
+        };
     }
 
     public async getTotalTherapists(): Promise<number> {

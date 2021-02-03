@@ -15,6 +15,7 @@ const therapistAttachmentsController = new TherapistAttachmentsController();
 therapistsRouter.get('/:id/day/availability', ensureAuthenticated, dayAvailabilityController.index);
 therapistsRouter.get('/:id/month/availability', ensureAuthenticated, monthAvailabilityController.index);
 therapistsRouter.get('/', ensureAuthenticated, therapistsController.index);
+therapistsRouter.get('/:id', ensureAuthenticated, therapistsController.index);
 therapistsRouter.get('/attachments/:id', ensureAuthenticated, therapistAttachmentsController.index);
 
 export default therapistsRouter;
