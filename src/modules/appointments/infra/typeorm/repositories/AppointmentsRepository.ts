@@ -4,6 +4,7 @@ import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointment
 import Appointment from '../entities/Appointment';
 import IFindTherapistAppointmentsDTO from '@modules/appointments/dtos/IFindTherapistAppointmentsDTO';
 import IFindAllAppointmentsDTO from '@modules/appointments/dtos/IFindAllAppointmentsDTO';
+import IReturnAllAppointmentsDTO from '@modules/appointments/dtos/IReturnAllAppointmentsDTO';
 
 interface IAppointment extends Appointment {
     therapist_name: string;
@@ -18,7 +19,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
         this.ormRepository = getRepository(Appointment);
     }
 
-    public async findAllAppointments(dto: IFindAllAppointmentsDTO): Promise<IAppointment[]> {
+    public async findAllAppointments(dto: IFindAllAppointmentsDTO): Promise<IReturnAllAppointmentsDTO> {
         const skip = dto.page > 1 ? (dto.page - 1) * 10 : 0;
 
         let sql = `select a.*,
@@ -31,30 +32,33 @@ class AppointmentsRepository implements IAppointmentsRepository {
                            (select s.description
                               from specialties s
                              where s.id = a.specialtie_id) as specialtie_name
-                       from appointments a
-                      where TO_CHAR(a.date, 'YYYY-MM-DD') >= '${dto.filter.initial_date}'
-                        and TO_CHAR(a.date, 'YYYY-MM-DD') <= '${dto.filter.final_date}'`;
+                       from appointments a where 1 = 1`;
 
         if (dto.filter.therapist_name) {
             sql += ` and a.therapist_id in (select users.id
                                               from users
-                                             where UPPER(users.name) like '%${dto.filter.therapist_name.toUpperCase()}%')`
+                                             where UPPER(users.name) like '%${dto.filter.therapist_name.toUpperCase()}%')`;
         }
 
         if (dto.filter.user_name) {
             sql += ` and a.user_id in (select users.id
                                          from users
-                                        where UPPER(users.name) like '%${dto.filter.user_name.toUpperCase()}%')`
+                                        where UPPER(users.name) like '%${dto.filter.user_name.toUpperCase()}%')`;
+        }
+
+        if (dto.id) {
+            sql += ` and a.user_id = '%${dto.id}%')`
         }
 
         sql += ` limit 10 offset ${skip}`;
 
-        console.log(sql);
-
-
         const appointments = await this.ormRepository.query(sql);
 
-        return appointments;
+        return {
+            total: appointments.length,
+            appointments,
+            total_pages: Math.ceil(appointments.length / 10)
+        };
     }
 
     public async find(therapist_id: string): Promise<Appointment[]> {

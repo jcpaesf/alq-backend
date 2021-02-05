@@ -1,6 +1,7 @@
 import ICreateAppointmentDTO from '../dtos/ICreateAppointmentDTO';
 import IFindTherapistAppointmentsDTO from '../dtos/IFindTherapistAppointmentsDTO';
 import IFindAllAppointmentsDTO from '../dtos/IFindAllAppointmentsDTO';
+import IReturnAllAppointmentsDTO from '../dtos/IReturnAllAppointmentsDTO';
 import Appointment from '../infra/typeorm/entities/Appointment';
 
 interface IAppointment extends Appointment {
@@ -10,7 +11,7 @@ interface IAppointment extends Appointment {
 }
 
 export default interface IAppointmentsRepository {
-    findAllAppointments(dto: IFindAllAppointmentsDTO): Promise<IAppointment[]>;
+    findAllAppointments(dto: IFindAllAppointmentsDTO): Promise<IReturnAllAppointmentsDTO>;
     find(therapist_id: string): Promise<Appointment[]>;
     findById(id: string): Promise<Appointment | undefined>;
     findByDate(date: Date): Promise<Appointment[]>;

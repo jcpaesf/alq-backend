@@ -22,6 +22,7 @@ export default class AppointmentsController {
 
     public async indexAll(request: Request, response: Response): Promise<Response> {
         const selectAppointmentsServices = container.resolve(SelectAllAppointmentsServices);
+        const id = request.user.id;
         const {
             therapist_name,
             user_name,
@@ -35,7 +36,8 @@ export default class AppointmentsController {
             user_name: user_name && String(user_name),
             initial_date: String(initial_date),
             final_date: String(final_date),
-            page: Number(page)
+            page: Number(page),
+            id
         });
 
         return response.json(appointments);
