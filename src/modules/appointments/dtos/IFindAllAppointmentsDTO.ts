@@ -4,6 +4,7 @@ export default interface IFindAllAppointmentsDTO {
     filter: {
         therapist_name: string | undefined;
         user_name: string | undefined;
+        specialtie_name: string | undefined;
         initial_date: string;
         final_date: string;
     }

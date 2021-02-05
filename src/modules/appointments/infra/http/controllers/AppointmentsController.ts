@@ -28,7 +28,8 @@ export default class AppointmentsController {
             user_name,
             initial_date,
             final_date,
-            page
+            page,
+            specialtie_name
         } = request.query;
 
         const appointments = await selectAppointmentsServices.execute({
@@ -37,7 +38,8 @@ export default class AppointmentsController {
             initial_date: String(initial_date),
             final_date: String(final_date),
             page: Number(page),
-            id
+            id,
+            specialtie_name: specialtie_name && String(specialtie_name)
         });
 
         return response.json(appointments);

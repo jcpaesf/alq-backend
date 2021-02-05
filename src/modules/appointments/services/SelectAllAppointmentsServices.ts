@@ -7,6 +7,7 @@ import IReturnAllAppointmentsDTO from '../dtos/IReturnAllAppointmentsDTO';
 interface IRequest {
     therapist_name: string | undefined;
     user_name: string | undefined;
+    specialtie_name: string | undefined;
     initial_date: string;
     final_date: string;
     page: number;
@@ -34,7 +35,8 @@ class SelectAllAppointmentsServices {
         initial_date,
         final_date,
         page,
-        id
+        id,
+        specialtie_name
     }: IRequest): Promise<IReturnAllAppointmentsDTO> {
         const user = await this.usersRepository.findById(id);
 
@@ -45,7 +47,8 @@ class SelectAllAppointmentsServices {
                 therapist_name,
                 user_name,
                 initial_date,
-                final_date
+                final_date,
+                specialtie_name
             }
         });
 

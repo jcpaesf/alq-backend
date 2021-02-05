@@ -50,6 +50,12 @@ class AppointmentsRepository implements IAppointmentsRepository {
             sql += ` and a.user_id = '%${dto.id}%')`
         }
 
+        if (dto.filter.specialtie_name) {
+            sql += ` and a.specialtie_id in(select specialties.id
+                                              from specialties
+                                             where UPPER(specialties.description) like '%${dto.filter.specialtie_name.toUpperCase()}%')`
+        }
+
         sql += ` limit 10 offset ${skip}`;
 
         const appointments = await this.ormRepository.query(sql);
