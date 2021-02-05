@@ -7,6 +7,12 @@ import IUsersFindDTO from '@modules/users/dtos/IUsersFindDTO';
 import IFilterUsersDTO from '@modules/users/dtos/IFilterUsersDTO';
 import UserSpecialtie from '../entities/UserSpecialtie';
 
+interface UserSpc {
+    id: string;
+    description: string;
+    service_time: number
+}
+
 class UsersRepository implements IUsersRepository {
     private ormRepository: Repository<User>;
     private ormRepositoryUserSpecialtie: Repository<UserSpecialtie>;
@@ -56,7 +62,7 @@ class UsersRepository implements IUsersRepository {
     public async findTherapists({ id, page, nameFilter, nameSpecialtie }: IFilterUsersDTO): Promise<IUsersFindDTO> {
         const skip = page > 1 ? (page - 1) * 10 : 0;
 
-        const [users, total] = await this.ormRepository.findAndCount({
+        let [users, total] = await this.ormRepository.findAndCount({
             where: {
                 type: 'therapist',
                 name: Raw(name => nameFilter ? `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'` : ''),
@@ -78,15 +84,13 @@ class UsersRepository implements IUsersRepository {
                     description: userSpc.specialtie.description,
                     service_time: userSpc.service_time
                 }
-            }).filter(userSpc => {
-                if (nameSpecialtie && userSpc.description.toLowerCase().indexOf(nameSpecialtie.toLowerCase()) !== -1) {
-                    return userSpc;
-                }
-
-                return userSpc;
             });
 
             user['user_specialtie'] = userSpecialtie;
+        }
+
+        if (nameSpecialtie) {
+            users = users.filter(user => user.user_specialtie.findIndex(specialtie => specialtie.description.toLowerCase().indexOf(nameSpecialtie.toLowerCase()) !== -1) !== -1);
         }
 
         return {
