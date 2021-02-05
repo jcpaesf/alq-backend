@@ -47,7 +47,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
         }
 
         if (dto.id) {
-            sql += ` and a.user_id = '%${dto.id}%')`
+            sql += ` and a.user_id = '${dto.id}'`
         }
 
         if (dto.filter.specialtie_name) {
