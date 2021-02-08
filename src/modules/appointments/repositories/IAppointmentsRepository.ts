@@ -16,6 +16,7 @@ export default interface IAppointmentsRepository {
     findById(id: string): Promise<Appointment | undefined>;
     findByDate(date: Date): Promise<Appointment[]>;
     findAppointment(date: Date, therapist_id: string): Promise<Appointment | undefined>;
+    findAppointmentBetweenHours(initial_date: Date, final_date: Date, therapist_id: string): Promise<Appointment[]>;
     findTherapistAppointments(dto: IFindTherapistAppointmentsDTO): Promise<Appointment[]>;
     getTotalAppointments(): Promise<number>;
     getTotalAppointments30Days(): Promise<number>;

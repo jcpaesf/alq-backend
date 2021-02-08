@@ -43,7 +43,7 @@ class SelectUserServices {
             return classToClass(user);
         }
 
-        user = await this.usersRepository.find({ page, typeFilter: type, nameFilter: name });
+        user = await this.usersRepository.find({ page, typeFilter: type, nameFilter: name, isUser: false });
 
         return classToClass(user);
     }

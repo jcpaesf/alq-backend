@@ -4,4 +4,5 @@ export default interface IFilterUsersDTO {
     nameFilter?: string;
     typeFilter: string;
     nameSpecialtie?: string;
+    isUser: boolean;
 }

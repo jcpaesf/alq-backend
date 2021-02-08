@@ -5,11 +5,8 @@ import User from '../infra/typeorm/entities/User';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUsersTokenRepository from '../repositories/IUsersTokenRepository';
-import IUserSpecialtiesRepository from '../repositories/IUserSpecialtiesRepository';
 import { classToClass } from 'class-transformer';
 import path from 'path';
-import UserSpecialtie from '../infra/typeorm/entities/UserSpecialtie';
-import ISpecialtiesRepository from '../repositories/ISpecialtiesRepository';
 
 enum TypeUser {
     User = 'user',

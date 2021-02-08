@@ -7,8 +7,10 @@ export default class TherapistsController {
         const selectTherapistServices = container.resolve(SelectTherapistServices);
         const { page, name, specialtie } = request.query;
         const id = request.params.id;
+        const user_id = request.user.id;
 
         const therapists = await selectTherapistServices.execute({
+            user_id,
             id,
             page: Number(page),
             name: name && String(name),

@@ -5,6 +5,15 @@ import Appointment from '../entities/Appointment';
 import IFindTherapistAppointmentsDTO from '@modules/appointments/dtos/IFindTherapistAppointmentsDTO';
 import IFindAllAppointmentsDTO from '@modules/appointments/dtos/IFindAllAppointmentsDTO';
 import IReturnAllAppointmentsDTO from '@modules/appointments/dtos/IReturnAllAppointmentsDTO';
+import {
+    getDate,
+    getMonth,
+    getYear,
+    getHours,
+    getMinutes,
+    format
+} from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface IAppointment extends Appointment {
     therapist_name: string;
@@ -94,6 +103,34 @@ class AppointmentsRepository implements IAppointmentsRepository {
         const appointment = await this.ormRepository.findOne({
             where: { date, therapist_id }
         });
+
+        return appointment;
+    }
+
+    public async findAppointmentBetweenHours(
+        initial_date: Date,
+        final_date: Date,
+        therapist_id: string
+    ): Promise<Appointment[]> {
+        const parsedIDate = format(initial_date, 'dd-MM-yyyy HH:mm', {
+            locale: ptBR
+        });
+        const parsedFDate = format(final_date, 'dd-MM-yyyy HH:mm', {
+            locale: ptBR
+        });
+
+        console.log(parsedIDate, parsedFDate);
+
+        const appointment = await this.ormRepository.find({
+            where: {
+                date: Raw(dateFieldName =>
+                    `to_char(${dateFieldName}, 'DD-MM-YYYY hh:MI') between '${parsedIDate}' and '${parsedFDate}'`
+                ),
+                therapist_id
+            }
+        });
+
+        console.log(appointment);
 
         return appointment;
     }

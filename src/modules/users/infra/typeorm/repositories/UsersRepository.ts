@@ -59,13 +59,14 @@ class UsersRepository implements IUsersRepository {
         return totalUsers30Days;
     }
 
-    public async findTherapists({ id, page, nameFilter, nameSpecialtie }: IFilterUsersDTO): Promise<IUsersFindDTO> {
+    public async findTherapists({ id, page, nameFilter, nameSpecialtie, isUser }: IFilterUsersDTO): Promise<IUsersFindDTO> {
         const skip = page > 1 ? (page - 1) * 10 : 0;
 
         let [users, total] = await this.ormRepository.findAndCount({
             where: {
                 type: 'therapist',
                 name: Raw(name => nameFilter ? `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'` : ''),
+                status: Raw(status => isUser ? `${status} = 'approved'` : ''),
                 id: Raw(name => id ? `${name} = '${id}'` : '')
             },
             skip,

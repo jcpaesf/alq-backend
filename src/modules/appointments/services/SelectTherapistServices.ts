@@ -2,8 +2,10 @@ import { inject, injectable } from 'tsyringe';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import { classToClass } from 'class-transformer'
 import IUsersFindDTO from '@modules/users/dtos/IUsersFindDTO';
+import AppError from '@shared/errors/AppError';
 
 interface IRequest {
+    user_id: string;
     id: string;
     page: number;
     name?: string;
@@ -17,13 +19,20 @@ class SelectTherapistServices {
         private usersRepository: IUsersRepository
     ) { }
 
-    public async execute({ id, page, name, specialtie }: IRequest): Promise<IUsersFindDTO> {
+    public async execute({ id, page, name, specialtie, user_id }: IRequest): Promise<IUsersFindDTO> {
+        const user = await this.usersRepository.findById(user_id);
+
+        if (!user) {
+            throw new AppError('Usuário não encontrado');
+        }
+
         const therapists = await this.usersRepository.findTherapists({
             id,
             page,
             nameFilter: name,
             typeFilter: '',
-            nameSpecialtie: specialtie
+            nameSpecialtie: specialtie,
+            isUser: user.type === 'user'
         });
 
         return classToClass(therapists);

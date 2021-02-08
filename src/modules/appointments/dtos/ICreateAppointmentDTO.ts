@@ -4,4 +4,5 @@ export default interface ICreateAppointmentDTO {
     date: Date;
     status: string;
     specialtie_id: string;
+    online: boolean;
 }

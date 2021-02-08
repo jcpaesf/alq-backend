@@ -31,6 +31,9 @@ class Appointment {
     @Column('uuid')
     specialtie_id: string;
 
+    @Column('boolean')
+    online: boolean;
+
     @OneToOne(() => User)
     @JoinColumn({ name: 'therapist_id' })
     therapist: User;
