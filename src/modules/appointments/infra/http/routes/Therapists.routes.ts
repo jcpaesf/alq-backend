@@ -16,6 +16,7 @@ therapistsRouter.get('/:id/day/availability', ensureAuthenticated, dayAvailabili
 therapistsRouter.get('/:id/month/availability', ensureAuthenticated, monthAvailabilityController.index);
 therapistsRouter.get('/', ensureAuthenticated, therapistsController.index);
 therapistsRouter.get('/:id', ensureAuthenticated, therapistsController.index);
+therapistsRouter.get('/site/find', therapistsController.indexSite);
 therapistsRouter.get('/attachments/:id', ensureAuthenticated, therapistAttachmentsController.index);
 
 export default therapistsRouter;

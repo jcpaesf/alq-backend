@@ -12,6 +12,14 @@ interface IRequest {
     specialtie?: string;
 }
 
+interface IRequestSite {
+    specialtie_id?: string;
+    city?: string;
+    online?: string;
+    presential?: string;
+    page?: number;
+}
+
 @injectable()
 class SelectTherapistServices {
     constructor(
@@ -36,6 +44,12 @@ class SelectTherapistServices {
         });
 
         return classToClass(therapists);
+    }
+
+    public async executeSite(dto: IRequestSite): Promise<IUsersFindDTO> {
+        const therapist = await this.usersRepository.findTherapistsSite(dto);
+
+        return classToClass(therapist);
     }
 }
 

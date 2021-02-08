@@ -5,6 +5,7 @@ import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IUsersFindDTO from '@modules/users/dtos/IUsersFindDTO';
 import IFilterUsersDTO from '@modules/users/dtos/IFilterUsersDTO';
+import IFilterTherapistSiteDTO from '@modules/users/dtos/IFilterTherapistSiteDTO';
 import UserSpecialtie from '../entities/UserSpecialtie';
 
 interface UserSpc {
@@ -67,7 +68,8 @@ class UsersRepository implements IUsersRepository {
                 type: 'therapist',
                 name: Raw(name => nameFilter ? `LOWER(${name}) Like '%${nameFilter.toLowerCase()}%'` : ''),
                 status: Raw(status => isUser ? `${status} = 'approved'` : ''),
-                id: Raw(name => id ? `${name} = '${id}'` : '')
+                id: Raw(name => id ? `${name} = '${id}'` : ''),
+                active: Raw(active => isUser ? `${active} = true` : ''),
             },
             skip,
             take: 10
@@ -96,6 +98,54 @@ class UsersRepository implements IUsersRepository {
 
         return {
             users: users.filter(user => nameSpecialtie ? user.user_specialtie.length : user),
+            total,
+            total_pages: Math.ceil(total / 10)
+        };
+    }
+
+    public async findTherapistsSite({
+        specialtie_id,
+        city: cityFilter,
+        online,
+        presential,
+        page
+    }: IFilterTherapistSiteDTO): Promise<IUsersFindDTO> {
+        const skip = page && page > 1 ? (page - 1) * 10 : 0;
+
+        let [users, total] = await this.ormRepository.findAndCount({
+            where: {
+                type: 'therapist',
+                city: Raw(city => cityFilter ? `LOWER(${city}) Like '%${cityFilter.toLowerCase()}%'` : ''),
+                work_online: Raw(workOnline => online !== undefined ? `${workOnline} = CAST(${online} as boolean)` : ''),
+                work_presential: Raw(workPresential => presential !== undefined ? `${workPresential} = CAST(${presential} as boolean)` : '')
+            },
+            skip,
+            take: 10
+        });
+
+        for (const user of users) {
+            const userSpecialties = await this.ormRepositoryUserSpecialtie.find({
+                where: { user_id: user.id },
+                relations: ['specialtie']
+            });
+
+            const userSpecialtie = userSpecialties.map(userSpc => {
+                return {
+                    id: userSpc.specialtie_id,
+                    description: userSpc.specialtie.description,
+                    service_time: userSpc.service_time
+                }
+            });
+
+            user['user_specialtie'] = userSpecialtie;
+        }
+
+        if (specialtie_id) {
+            users = users.filter(user => user.user_specialtie.findIndex(specialtie => specialtie.id === specialtie_id) !== -1);
+        }
+
+        return {
+            users: users.filter(user => specialtie_id ? user.user_specialtie.length : user),
             total,
             total_pages: Math.ceil(total / 10)
         };

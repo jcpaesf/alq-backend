@@ -19,4 +19,25 @@ export default class TherapistsController {
 
         return response.json(therapists);
     }
+
+    public async indexSite(request: Request, response: Response): Promise<Response> {
+        const {
+            specialtie_id,
+            city,
+            online,
+            presential,
+            page
+        } = request.query;
+        const selectTherapistServices = container.resolve(SelectTherapistServices);
+        
+        const therapist = await selectTherapistServices.executeSite({
+            specialtie_id: specialtie_id && String(specialtie_id),
+            city: city && String(city),
+            online: online && String(online),
+            presential: presential && String(presential),
+            page: page ? Number(page) : undefined
+        });
+
+        return response.json(therapist);
+    }
 }

@@ -119,8 +119,6 @@ class AppointmentsRepository implements IAppointmentsRepository {
             locale: ptBR
         });
 
-        console.log(parsedIDate, parsedFDate);
-
         const appointment = await this.ormRepository.find({
             where: {
                 date: Raw(dateFieldName =>
@@ -129,8 +127,6 @@ class AppointmentsRepository implements IAppointmentsRepository {
                 therapist_id
             }
         });
-
-        console.log(appointment);
 
         return appointment;
     }
