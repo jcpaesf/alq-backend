@@ -34,7 +34,8 @@ class SelectAppointmentsServices {
                 specialtie_id: appointment.specialtie_id,
                 specialtie_name: appointment.specialtie.description,
                 user_id: appointment.user_id,
-                user_name: appointment.user.name
+                user_name: appointment.user.name,
+                online: appointment.online
             }
         });
 
