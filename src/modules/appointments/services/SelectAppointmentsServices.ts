@@ -35,7 +35,12 @@ class SelectAppointmentsServices {
                 specialtie_name: appointment.specialtie.description,
                 user_id: appointment.user_id,
                 user_name: appointment.user.name,
-                online: appointment.online
+                online: appointment.online,
+                start_call_therapist: appointment.start_call_therapist,
+                start_call_user: appointment.start_call_user,
+                finish_call_therapist: appointment.finish_call_therapist,
+                finish_call_user: appointment.finish_call_user,
+                rating: appointment.rating
             }
         });
 

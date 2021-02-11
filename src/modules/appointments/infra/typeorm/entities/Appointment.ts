@@ -34,6 +34,21 @@ class Appointment {
     @Column('boolean')
     online: boolean;
 
+    @Column('timestamp with time zone')
+    start_call_therapist: Date;
+
+    @Column('timestamp with time zone')
+    start_call_user: Date;
+
+    @Column('timestamp with time zone')
+    finish_call_therapist: Date;
+
+    @Column('timestamp with time zone')
+    finish_call_user: Date;
+
+    @Column('integer')
+    rating: number;
+
     @OneToOne(() => User)
     @JoinColumn({ name: 'therapist_id' })
     therapist: User;
