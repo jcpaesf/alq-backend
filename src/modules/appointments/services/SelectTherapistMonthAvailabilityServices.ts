@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { getDaysInMonth, getDate, isBefore } from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
 import IUserSchedulesRepository from '@modules/users/repositories/IUserSchedulesRepository';
 
 interface IRequest {
@@ -38,7 +39,7 @@ class ListTherapistMonthAvailabilityServices {
 
         const availableDays = eachDayArray.map(day => {
             const userScheduleInDay = userSchedules.some(schedule => {
-                if (isBefore(schedule.service_date, currentDate)) {
+                if (isBefore(zonedTimeToUtc(schedule.service_date, 'America/Sao_Paulo'), currentDate)) {
                     return false;
                 }
 

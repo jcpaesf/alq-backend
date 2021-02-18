@@ -26,8 +26,12 @@ class UpdateFinishCallAppointmentServices {
 
         if (!appointment) throw new AppError('Atendimento não encontrado');
 
-        if (user.type === 'user' && !appointment.finish_call_user) appointment.finish_call_user = new Date();
-        if (user.type === 'therapist' && !appointment.finish_call_therapist) appointment.finish_call_therapist = new Date();
+        const date = new Date();
+
+        date.setUTCHours(date.getUTCHours() - 3);
+
+        if (user.type === 'user' && !appointment.finish_call_user) appointment.finish_call_user = date;
+        if (user.type === 'therapist' && !appointment.finish_call_therapist) appointment.finish_call_therapist = date;
 
         await this.appointmentsRepository.save(appointment);
     }
