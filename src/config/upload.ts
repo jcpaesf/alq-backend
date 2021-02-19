@@ -39,7 +39,7 @@ export default {
     config: {
         disk: {},
         aws: {
-            bucket: 'app-alquimia'
+            bucket: 'app-alquimiadocoracao'
         }
     }
 } as IUploadConfig;

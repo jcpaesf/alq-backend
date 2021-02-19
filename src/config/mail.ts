@@ -12,7 +12,7 @@ export default {
     driver: process.env.MAIL_DRIVER || 'ethereal',
     defaults: {
         from: {
-            email: 'jcpaesf@gmail.com',
+            email: 'alquimiadocoracao2020@gmail.com',
             name: 'Equipe Alquimia do Coração'
         }
     }

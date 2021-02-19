@@ -10,7 +10,7 @@ class S3StorageProvider implements IStorageProvider {
 
     constructor() {
         this.client = new aws.S3({
-            region: 'us-east-2'
+            region: 'sa-east-1'
         });
     }
 
